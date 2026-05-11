@@ -1,0 +1,507 @@
+[
+    {
+        "id": "2c2a5fea32af1753",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqtt-in",
+        "type": "mqtt in",
+        "z": "2c2a5fea32af1753",
+        "name": "Recebe CardioAI",
+        "topic": "cardioia/sinais",
+        "broker": "hivemq-broker",
+        "inputs": 0,
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "fn-temp",
+                "fn-umid",
+                "fn-bpm",
+                "fn-alertas"
+            ]
+        ]
+    },
+    {
+        "id": "fn-temp",
+        "type": "function",
+        "z": "2c2a5fea32af1753",
+        "name": "Extrai Temp",
+        "func": "var data = JSON.parse(msg.payload);\nmsg.payload = data.temp;\nreturn msg;",
+        "outputs": 1,
+        "x": 350,
+        "y": 80,
+        "wires": [
+            [
+                "ecc26bf9821242b4",
+                "c8c89bc9ee9c8b7b"
+            ]
+        ]
+    },
+    {
+        "id": "fn-umid",
+        "type": "function",
+        "z": "2c2a5fea32af1753",
+        "name": "Extrai Umid",
+        "func": "var data = JSON.parse(msg.payload);\nmsg.payload = data.umid;\nreturn msg;",
+        "outputs": 1,
+        "x": 350,
+        "y": 160,
+        "wires": [
+            [
+                "4510e54eefd12f36"
+            ]
+        ]
+    },
+    {
+        "id": "fn-bpm",
+        "type": "function",
+        "z": "2c2a5fea32af1753",
+        "name": "Extrai BPM",
+        "func": "var data = JSON.parse(msg.payload);\nmsg.payload = data.bpm;\nreturn msg;",
+        "outputs": 1,
+        "x": 350,
+        "y": 240,
+        "wires": [
+            [
+                "a63cdbc922e52dc7",
+                "36bf3e7ea0af502a"
+            ]
+        ]
+    },
+    {
+        "id": "fn-alertas",
+        "type": "function",
+        "z": "2c2a5fea32af1753",
+        "name": "Alertas",
+        "func": "var data = JSON.parse(msg.payload);\nvar alertas = [];\nif (data.temp > 38) alertas.push('⚠️ Febre: ' + data.temp + '°C');\nif (data.bpm > 120) alertas.push('⚠️ Taquicardia: ' + data.bpm + ' BPM');\nif (data.bpm < 40) alertas.push('⚠️ Bradicardia: ' + data.bpm + ' BPM');\nif (data.umid > 80) alertas.push('⚠️ Umidade alta: ' + data.umid + '%');\nif (alertas.length > 0) {\n    msg.payload = alertas.join('\\n');\n} else {\n    msg.payload = '✅ Sinais vitais normais';\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "text-status"
+            ]
+        ]
+    },
+    {
+        "id": "text-status",
+        "type": "ui-text",
+        "z": "2c2a5fea32af1753",
+        "group": "group-alertas",
+        "order": "",
+        "width": "",
+        "height": "",
+        "name": "Status",
+        "label": "Status",
+        "layout": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "x": 530,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ecc26bf9821242b4",
+        "type": "ui-gauge",
+        "z": "2c2a5fea32af1753",
+        "name": "Temperatura (°C)",
+        "group": "group-sinais",
+        "order": 0,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Temperatura",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "°C",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": "35",
+        "max": "42",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 570,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4510e54eefd12f36",
+        "type": "ui-gauge",
+        "z": "2c2a5fea32af1753",
+        "name": "Umidade (%)",
+        "group": "group-sinais",
+        "order": 0,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Umidade",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "%",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "100",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 550,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a63cdbc922e52dc7",
+        "type": "ui-gauge",
+        "z": "2c2a5fea32af1753",
+        "name": "BPM",
+        "group": "group-sinais",
+        "order": 0,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 3,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "BPM",
+        "alwaysShowTitle": false,
+        "floatingTitlePosition": "top-left",
+        "units": "bpm",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "from": "0",
+                "color": "#5cd65c",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "4",
+                "color": "#ffc800",
+                "text": "",
+                "textType": "label"
+            },
+            {
+                "from": "7",
+                "color": "#ea5353",
+                "text": "",
+                "textType": "label"
+            }
+        ],
+        "min": 0,
+        "max": "200",
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "x": 530,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c8c89bc9ee9c8b7b",
+        "type": "ui-chart",
+        "z": "2c2a5fea32af1753",
+        "group": "group-sinais",
+        "name": "Temperatura ao longo do tempo",
+        "label": "chart",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 610,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "36bf3e7ea0af502a",
+        "type": "ui-chart",
+        "z": "2c2a5fea32af1753",
+        "group": "group-sinais",
+        "name": "BPM ao longo do tempo",
+        "label": "chart",
+        "order": 9007199254740991,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "",
+        "xAxisPropertyType": "timestamp",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 4,
+        "showLegend": true,
+        "removeOlder": 1,
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "",
+        "colors": [
+            "#0095ff",
+            "#ff0000",
+            "#ff7f0e",
+            "#2ca02c",
+            "#a347e1",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 8,
+        "className": "",
+        "interpolation": "linear",
+        "x": 590,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "hivemq-broker",
+        "type": "mqtt-broker",
+        "name": "HiveMQ Cloud",
+        "broker": "dc8d802607554c6cb32cacfed071c8b9.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": true,
+        "clientid": "nodered-cardioia",
+        "usetls": true,
+        "keepalive": "60",
+        "cleansession": true
+    },
+    {
+        "id": "group-alertas",
+        "type": "ui-group",
+        "name": "Alertas",
+        "page": "page-cardioia",
+        "width": 12,
+        "order": 2
+    },
+    {
+        "id": "group-sinais",
+        "type": "ui-group",
+        "name": "Sinais Vitais",
+        "page": "page-cardioia",
+        "width": 12,
+        "height": "",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "page-cardioia",
+        "type": "ui-page",
+        "name": "CardioIA Monitor",
+        "ui": "ui-main",
+        "path": "/cardioia",
+        "icon": "",
+        "layout": "grid",
+        "theme": "f74421ed9b1d4e10",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "ui-main",
+        "type": "ui-base",
+        "name": "CardioIA",
+        "path": "/dashboard",
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ]
+    },
+    {
+        "id": "f74421ed9b1d4e10",
+        "type": "ui-theme",
+        "name": "Theme Name",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#0094ce",
+            "bgPage": "#eeeeee",
+            "groupBg": "#ffffff",
+            "groupOutline": "#cccccc"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "cbfe109ce3c09aae",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.30.2"
+        }
+    }
+]

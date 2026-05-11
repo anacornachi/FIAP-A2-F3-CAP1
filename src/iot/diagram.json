@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "author": "CardioIA",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "wokwi-esp32-devkit-v1", "id": "esp32", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-dht22", "id": "dht1", "top": -80, "left": 200, "attrs": {} },
+    { "type": "wokwi-pushbutton", "id": "btn1", "top": 63.8, "left": 144, "attrs": {} }
+  ],
+  "connections": [
+    [ "dht1:VCC", "esp32:3V3", "red", [] ],
+    [ "dht1:GND", "esp32:GND.1", "black", [ "v0" ] ],
+    [ "dht1:SDA", "esp32:D15", "green", [ "v0" ] ],
+    [ "btn1:1.l", "esp32:D18", "green", [ "h0" ] ],
+    [ "btn1:2.l", "esp32:GND.2", "black", [] ]
+  ],
+  "dependencies": {}
+}
