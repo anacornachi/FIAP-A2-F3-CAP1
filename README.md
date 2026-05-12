@@ -71,6 +71,7 @@ entre conectado e desconectado, representando oscilações de rede reais.
 - Relatório:
   - `document/relatorio_fase3_parte1.pdf`
   - `document/relatorio_fase3_parte1.md`
+- Projeto no Wokwi: https://wokwi.com/projects/463755047971591169
 
 ---
 
