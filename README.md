@@ -62,10 +62,15 @@ entre conectado e desconectado, representando oscilações de rede reais.
 | BPM         | Bradicardia     | < 40 bpm  |
 | Umidade     | Umidade elevada | > 80%     |
 
+**Monitor Serial — Resiliência Offline e Sincronização:**
+![Monitor Serial](assets/monitor_serial.png)
+
 #### Entregáveis
 
 - Código C++ comentado: `src/iot/src/main.cpp`
-- Relatório: `document/relatorio_fase3_parte1.pdf`
+- Relatório:
+  - `document/relatorio_fase3_parte1.pdf`
+  - `document/relatorio_fase3_parte1.md`
 
 ---
 
@@ -158,6 +163,9 @@ ESP32 (Python publisher) → HiveMQ Cloud (MQTT broker) → Node-RED (dashboard)
 
 ## 🗃 Histórico de lançamentos
 
+- 0.2.0 - 12/05/2026
+  - Fase 3 - Parte 1: Adiciona relatório detalhado com evidências de testes offline e online, incluindo screenshots do Monitor Serial e análise de resiliência.
+  * Atualiza README com instruções de execução e evidências visuais.
 - 0.1.0 - 11/05/2026
   - Fase 3 - Parte 1: Código ESP32 com DHT22 e botão BPM, lógica de resiliência
     offline com buffer FIFO de 100 registros e alertas clínicos automáticos.
